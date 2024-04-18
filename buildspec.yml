@@ -17,6 +17,6 @@ phases:
     post_build:
          commands:
             - ls
-            - ls .aws-sam/*/*
-            - zip app.zip .aws-sam/*/*
+            - ls .aws-sam/build/*/*
+            - zip app.zip .aws-sam/build/*/*
             - echo Build completed on `date`
