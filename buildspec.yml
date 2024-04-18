@@ -1,0 +1,21 @@
+version: 0.2
+env:
+    variables:
+        BUILD_ENV: "prod"
+phases:
+    install:
+        runtime-versions:
+            java: corretto17
+        # commands:
+        #     - echo Installing source NPM dependencies...
+        #     - npm install
+        #     - npm install -g @angular/cli
+    build:
+        commands:
+            - echo Build started on `date`
+            - sam build
+    post_build:
+         commands:
+            - ls 
+            - ls *
+            - echo Build completed on `date`

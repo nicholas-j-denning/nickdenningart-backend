@@ -1,0 +1,20 @@
+# SAM template
+# Needed for sam build and sam local invoke
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Example of deploying Java function as AWS Lambda Function with AWS API Gateway using Spring Cloud Function support.
+
+Resources:
+  GalleryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: gallery
+      Handler: org.springframework.cloud.function.adapter.aws.FunctionInvoker::handleRequest
+      Runtime: java17
+      CodeUri: .
+      MemorySize: 1024
+      Timeout: 30
+      Environment:
+        Variables:
+          MAIN_CLASS: com.nickdenningart.gallery.App
+          SPRING_PROFILES_ACTIVE: prod
