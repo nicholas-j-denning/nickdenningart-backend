@@ -16,6 +16,7 @@ phases:
             - sam build
     post_build:
          commands:
-            - ls 
-            - ls *
+            - cd .aws-sam/build/GalleryFunction
+            - zip -r app.zip *
+            - aws lambda update-function-code --function-name NDABackend-FractalFunction8D81D62B-vr3ZXsbLsvAg --zip-file fileb://app.zip
             - echo Build completed on `date`
