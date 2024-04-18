@@ -18,4 +18,5 @@ phases:
          commands:
             - ls
             - ls .aws-sam/*/*
+            - zip app.zip .aws-sam/*/*
             - echo Build completed on `date`
