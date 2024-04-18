@@ -16,7 +16,7 @@ phases:
             - sam build
     post_build:
          commands:
-            - cd .aws-sam/build/*/*
+            - cd .aws-sam/build
             - ls -d */ 
             - ls -d */ | zip -r app.zip 
             - aws lambda update-function-code --function-name NDABackend-FractalFunction8D81D62B-vr3ZXsbLsvAg --zip-file fileb://app.zip
