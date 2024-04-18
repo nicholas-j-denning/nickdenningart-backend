@@ -45,7 +45,7 @@ public class PrintifyService {
         HttpEntity<Upload> request14400x9600 = new HttpEntity<>(upload14400x9600,headers);
         upload14400x9600 = restTemplate.postForObject(printifyUrl+"/uploads/images.json", request14400x9600, Upload.class);
         Image image14400x9600 = Image.builder()
-            .id(upload14400x9600.getId())
+            .id(upload14400x9600.id())
             .x(0.5f)
             .y(0.5f)
             .angle(0)
@@ -59,8 +59,9 @@ public class PrintifyService {
             .build();
         HttpEntity<Upload> request9600x14400 = new HttpEntity<>(upload9600x14400,headers);
         upload9600x14400 = restTemplate.postForObject(printifyUrl+"/uploads/images.json", request9600x14400, Upload.class);
-        Image image9600x14400 = Image.builder()
-            .id(upload9600x14400.getId())
+        Image image9600x14400 = 
+            Image.builder()
+            .id(upload9600x14400.id())
             .x(0.5f)
             .y(0.5f)
             .angle(0)
@@ -75,7 +76,7 @@ public class PrintifyService {
         HttpEntity<Upload> request9000x9000 = new HttpEntity<>(upload9000x9000,headers);
         upload9000x9000 = restTemplate.postForObject(printifyUrl+"/uploads/images.json", request9000x9000, Upload.class);
         Image image9000x9000 = Image.builder()
-            .id(upload9000x9000.getId())
+            .id(upload9000x9000.id())
             .x(0.5f)
             .y(0.5f)
             .angle(0)
@@ -107,7 +108,7 @@ public class PrintifyService {
             .build();
         HttpEntity<Product> requestMhp = new HttpEntity<>(mhp,headers);
         mhp = restTemplate.postForObject(printifyUrl+"/shops/11247664/products.json", requestMhp, Product.class);
-        restTemplate.postForObject(printifyUrl+"/shops/11247664/products/"+mhp.getId()+"/publish.json", publishingProperties, PublishingProperties.class);
+        restTemplate.postForObject(printifyUrl+"/shops/11247664/products/"+mhp.id()+"/publish.json", publishingProperties, PublishingProperties.class);
 
         System.out.println("Vertical Posters");
         // Create Matte Vertical Posters
@@ -134,7 +135,7 @@ public class PrintifyService {
             .build();
         HttpEntity<Product> requestMvp = new HttpEntity<>(mvp,headers);
         mvp = restTemplate.postForObject(printifyUrl+"/shops/11247664/products.json", requestMvp, Product.class);
-        restTemplate.postForObject(printifyUrl+"/shops/11247664/products/"+mvp.getId()+"/publish.json", publishingProperties, PublishingProperties.class);
+        restTemplate.postForObject(printifyUrl+"/shops/11247664/products/"+mvp.id()+"/publish.json", publishingProperties, PublishingProperties.class);
 
         System.out.println("Square Posters");
         // Create Matte Square Poster
@@ -161,7 +162,7 @@ public class PrintifyService {
             .build();
         HttpEntity<Product> requestMsp = new HttpEntity<>(msp,headers);
         msp = restTemplate.postForObject(printifyUrl+"/shops/11247664/products.json", requestMsp, Product.class);
-        restTemplate.postForObject(printifyUrl+"/shops/11247664/products/"+msp.getId()+"/publish.json", publishingProperties, PublishingProperties.class);
+        restTemplate.postForObject(printifyUrl+"/shops/11247664/products/"+msp.id()+"/publish.json", publishingProperties, PublishingProperties.class);
 
         System.out.println("Horizontal Acrylic");
         // Create Horizontal Acrylic
@@ -188,7 +189,7 @@ public class PrintifyService {
             .build();
         HttpEntity<Product> requestHa = new HttpEntity<>(ha,headers);
         ha = restTemplate.postForObject(printifyUrl+"/shops/11247664/products.json", requestHa, Product.class);
-        restTemplate.postForObject(printifyUrl+"/shops/11247664/products/"+ha.getId()+"/publish.json", publishingProperties, PublishingProperties.class);
+        restTemplate.postForObject(printifyUrl+"/shops/11247664/products/"+ha.id()+"/publish.json", publishingProperties, PublishingProperties.class);
 
         System.out.println("Vertical Acrylic");
         // Create Vertical Acrylic
@@ -215,7 +216,7 @@ public class PrintifyService {
             .build();
         HttpEntity<Product> requestVa = new HttpEntity<>(va,headers);
         va = restTemplate.postForObject(printifyUrl+"/shops/11247664/products.json", requestVa, Product.class);
-        restTemplate.postForObject(printifyUrl+"/shops/11247664/products/"+va.getId()+"/publish.json", publishingProperties, PublishingProperties.class);
+        restTemplate.postForObject(printifyUrl+"/shops/11247664/products/"+va.id()+"/publish.json", publishingProperties, PublishingProperties.class);
 
         System.out.println("Square Acrylic");
         // Create Square Acrylic
@@ -237,6 +238,6 @@ public class PrintifyService {
             .build();
         HttpEntity<Product> requestSa = new HttpEntity<>(sa,headers);
         sa = restTemplate.postForObject(printifyUrl+"/shops/11247664/products.json", requestSa, Product.class);
-        restTemplate.postForObject(printifyUrl+"/shops/11247664/products/"+sa.getId()+"/publish.json", publishingProperties, PublishingProperties.class);
+        restTemplate.postForObject(printifyUrl+"/shops/11247664/products/"+sa.id()+"/publish.json", publishingProperties, PublishingProperties.class);
     };
 }
