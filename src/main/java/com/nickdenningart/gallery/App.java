@@ -1,7 +1,6 @@
 package com.nickdenningart.gallery;
 
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
