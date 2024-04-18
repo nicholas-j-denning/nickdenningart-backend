@@ -1,4 +1,4 @@
-package com.nickdenningart.gallery.DTO;
+package com.nickdenningart.fractal.dto;
 
 import java.util.List;
 

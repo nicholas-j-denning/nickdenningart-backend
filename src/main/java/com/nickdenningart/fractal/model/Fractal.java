@@ -1,4 +1,4 @@
-package com.nickdenningart.gallery.DAO;
+package com.nickdenningart.fractal.model;
 
 import java.util.List;
 

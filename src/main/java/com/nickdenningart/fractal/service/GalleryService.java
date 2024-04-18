@@ -1,4 +1,4 @@
-package com.nickdenningart.gallery;
+package com.nickdenningart.fractal.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.nickdenningart.gallery.DAO.Fractal;
-import com.nickdenningart.gallery.DTO.GalleryItem;
+import com.nickdenningart.fractal.dto.GalleryItem;
+import com.nickdenningart.fractal.model.Fractal;
 
 import io.awspring.cloud.dynamodb.DynamoDbTemplate;
 
