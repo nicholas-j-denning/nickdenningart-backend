@@ -1,0 +1,64 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Example of deploying Java function as AWS Lambda Function with AWS API Gateway using Spring Cloud Function support.
+
+Globals:
+  Api:
+    # API Gateway regional endpoints
+    EndpointConfiguration: REGIONAL
+
+Resources:
+  GalleryApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      DefinitionBody:
+          openapi: 3.0.1
+          info:
+            title: !Ref 'AWS::StackName'
+          paths: {}
+      CorsConfiguration:
+        AllowMethods: 
+          - GET
+        AllowHeaders: 
+          - "*"
+        AllowOrigins: 
+          - "*"
+
+  GalleryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: gallery
+      Handler: org.springframework.cloud.function.adapter.aws.FunctionInvoker::handleRequest
+      Runtime: java17
+      SnapStart:
+        ApplyOn: PublishedVersions
+      CodeUri: .
+      MemorySize: 1024
+      Policies: 
+        - DynamoDBCrudPolicy:
+            TableName: prod-fractal
+        - SSMParameterWithSlashPrefixReadPolicy:
+            ParameterName: /*
+
+      Timeout: 30
+      Environment:
+        Variables:
+          MAIN_CLASS: com.nickdenningart.gallery.App
+          SPRING_PROFILES_ACTIVE: prod
+      Events:
+        HttpApiEvent:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref GalleryApi
+            TimeoutInMillis: 20000
+            PayloadFormatVersion: '1.0'
+
+Outputs:
+  SpringUppercaseApi:
+    Description: URL for application
+    Value: !Sub 'https://${GalleryApi}.execute-api.${AWS::Region}.amazonaws.com/'
+    Export:
+      Name: GalleryFunction
+      
+# curl -H "Content-Type: application/json" -X POST -d '"foobar"' https://jvd5wf478j.execute-api.us-east-2.amazonaws.com/uppercase
+# you should receive the response "FOOBAR"
