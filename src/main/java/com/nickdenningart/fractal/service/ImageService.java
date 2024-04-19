@@ -1,13 +1,13 @@
 package com.nickdenningart.fractal.service;
 
+import com.nickdenningart.fractal.exception.DynamoDbItemNotFoundException;
+import com.nickdenningart.fractal.exception.ImageFileReadException;
+
 import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.nickdenningart.fractal.exception.DynamoDbItemNotFoundException;
 
 import io.awspring.cloud.s3.ObjectMetadata;
 import io.awspring.cloud.s3.S3Template;
@@ -25,14 +25,27 @@ public class ImageService {
         this.bucket = bucket;
     }
 
-    private ObjectMetadata metadata(String id) throws DynamoDbItemNotFoundException{
+    private ObjectMetadata uploadMetadata(String id) throws DynamoDbItemNotFoundException{
         String filename = "\"Nick Denning " + fractalService.getFractal(id).getTitle() + ".jpg\"";
         return ObjectMetadata.builder().contentDisposition("attachment; filename="+filename).build();
     }
 
-    public void storeImage(MultipartFile file, String id, String size) throws IOException, DynamoDbItemNotFoundException {
+    public void storeImage(MultipartFile file, String id, String size) throws DynamoDbItemNotFoundException, ImageFileReadException {
         String key = size + "/" + id + ".jpg";
-        s3Template.upload(bucket, key, file.getInputStream(), metadata(id));
+        try {
+            s3Template.upload(bucket, key, file.getInputStream(), uploadMetadata(id));
+        } catch (IOException e) {
+            throw new ImageFileReadException();
+        }
+    }
+
+    public void removeImage(String id, String size){
+        String key = size + "/" + id + ".jpg";
+        s3Template.deleteObject(bucket, key);
+    }
+
+    public boolean isImagePresent(String id, String size){
+        return s3Template.objectExists(bucket, size+"/"+id+".jpg");
     }
 
 }

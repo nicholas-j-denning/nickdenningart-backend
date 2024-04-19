@@ -13,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.nickdenningart.fractal.model.Fractal;
+import com.nickdenningart.fractal.service.AuthorizationService;
 import com.nickdenningart.fractal.service.FractalService;
 import com.nickdenningart.fractal.service.ImageService;
 import com.nickdenningart.fractal.service.PrintifyService;
@@ -25,12 +26,12 @@ public class FractalControllerTests {
 
     @MockBean
     private FractalService fractalService;
-
     @MockBean
     private ImageService imageService;
-
     @MockBean
     private PrintifyService printifyService;
+    @MockBean 
+    AuthorizationService authorizationService;
 
     @Test
     void getFractalWorks() throws Exception {
