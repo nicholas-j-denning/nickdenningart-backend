@@ -16,6 +16,7 @@ import com.nickdenningart.fractal.dto.printify.Product;
 import com.nickdenningart.fractal.dto.printify.PublishingProperties;
 import com.nickdenningart.fractal.dto.printify.Upload;
 import com.nickdenningart.fractal.dto.printify.Variant;
+import com.nickdenningart.fractal.exception.DynamoDbItemNotFoundException;
 import com.nickdenningart.fractal.model.Fractal;
 
 @Service
@@ -27,7 +28,7 @@ public class PrintifyService {
     @Value("${printify-token}") String token;
     @Value("${base-image-url}") private String baseImageUrl;
 
-    public void createProducts(String id){
+    public void createProducts(String id) throws DynamoDbItemNotFoundException{
         Fractal fractal = fractalService.getFractal(id);
 
         // http client
