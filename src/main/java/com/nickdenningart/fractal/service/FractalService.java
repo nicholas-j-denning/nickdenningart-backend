@@ -29,6 +29,7 @@ public class FractalService {
         fractal.setId(uuid);
         fractal.setDate(LocalDateTime.now().toString());
         fractal.setPrintsUrl(shopUrl+fractal.getTitle().replaceAll(" ","+"));
+        fractal.setSizes(List.of());
         return dynamoDbTemplate.save(fractal);
     }
 
@@ -41,6 +42,10 @@ public class FractalService {
 
     public List<Fractal> getFractals(){
         return dynamoDbTemplate.scanAll(Fractal.class).items().stream().collect(toList());
+    }
+
+    public Fractal updateFractal(Fractal fractal){
+        return dynamoDbTemplate.update(fractal);
     }
 
     public void deleteFractal(String id) {

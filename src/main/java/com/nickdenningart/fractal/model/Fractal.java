@@ -22,6 +22,7 @@ public class Fractal implements Comparable<Fractal>{
     private String title;
     private List<String> tags; 
     private String printsUrl;
+    private List<String> sizes;
 
     @DynamoDbPartitionKey
     public String getId() {

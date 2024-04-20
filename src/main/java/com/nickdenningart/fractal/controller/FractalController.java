@@ -12,6 +12,7 @@ import com.nickdenningart.fractal.service.PrintifyService;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -66,11 +67,20 @@ public class FractalController {
 
     // create products on printify    
     @PostMapping("/fractal/{id}/products")
-    public Fractal post9000(@PathVariable String id, @RequestHeader("x-api-key") String key) 
+    public Fractal createProducts(@PathVariable String id, @RequestHeader("x-api-key") String key) 
         throws DynamoDbItemNotFoundException, AuthorizationException{
         authorizationService.checkKey(key);
         printifyService.createProducts(id); 
         return fractalService.getFractal(id);
+    }
+
+    // delete fractal images and db record
+    @DeleteMapping("/fractal/{id}")
+    public void deleteFractal(@PathVariable String id, @RequestHeader("x-api-key") String key) 
+        throws DynamoDbItemNotFoundException, AuthorizationException {
+        authorizationService.checkKey(key);
+        imageService.removeAllImages(id);
+        fractalService.deleteFractal(id);
     }
 
 }

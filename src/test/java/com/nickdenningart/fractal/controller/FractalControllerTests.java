@@ -47,5 +47,18 @@ public class FractalControllerTests {
                 content().string(containsString(id))
             );
     }
+
+    @Test
+    void deleteFractalWorks() throws Exception {
+        String id = "testid";
+        String key = "testkey";
+        Fractal fractal = Fractal.builder()
+            .id(id)
+            .build();
+        this.mockMvc.perform(delete("/fractal/"+id).header("x-api-key", key))
+            .andExpectAll(
+                status().isOk()
+            );
+    }
     
 }

@@ -51,7 +51,10 @@ public class ImageServiceTests {
 
         // set title imageService will use to set s3 download name
         when(fractalService.getFractal(id))
-            .thenReturn(Fractal.builder().title("test title").build());
+            .thenReturn(Fractal.builder()
+                .title("test title")
+                .sizes(List.of(size))
+                .build());
 
         // Check image is not present
         assertThat(imageService.isImagePresent(id, size)).isFalse();
