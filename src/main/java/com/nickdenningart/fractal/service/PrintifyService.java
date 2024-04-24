@@ -26,7 +26,7 @@ public class PrintifyService {
 
     @Value("${printify-api-url}") String printifyUrl;
     @Value("${printify-token}") String token;
-    private String baseImageUrl = "images.nickdenningart.com/";
+    private String baseImageUrl = "https://images.nickdenningart.com/";
 
     public void createProducts(String id) throws DynamoDbItemNotFoundException{
         Fractal fractal = fractalService.getFractal(id);
