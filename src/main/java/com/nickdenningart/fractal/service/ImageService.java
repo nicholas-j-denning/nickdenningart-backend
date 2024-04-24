@@ -1,53 +1,71 @@
 package com.nickdenningart.fractal.service;
 
 import com.nickdenningart.fractal.exception.DynamoDbItemNotFoundException;
-import com.nickdenningart.fractal.exception.ImageFileReadException;
 import com.nickdenningart.fractal.model.Fractal;
 
-import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import io.awspring.cloud.s3.ObjectMetadata;
 import io.awspring.cloud.s3.S3Template;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.CopyObjectRequest;
+import software.amazon.awssdk.services.s3.model.MetadataDirective;
 
 @Service
 public class ImageService {
 
     private final S3Template s3Template;
+    private final S3Client s3Client;
     private final FractalService fractalService;
     private final String bucket;
 
-    public ImageService(S3Template s3Template, FractalService fractalService, @Value("${image-bucket}") String bucket) {
+    public ImageService(S3Template s3Template, S3Client s3Client, FractalService fractalService, @Value("${image-bucket}") String bucket) {
         this.s3Template = s3Template;
+        this.s3Client = s3Client;
         this.fractalService = fractalService;
         this.bucket = bucket;
-    }
-
-    private ObjectMetadata uploadMetadata(String id) throws DynamoDbItemNotFoundException{
-        String filename = "\"Nick Denning " + fractalService.getFractal(id).getTitle() + ".jpg\"";
-        return ObjectMetadata.builder().contentDisposition("attachment; filename="+filename).build();
     }
 
     private String getKey(String id, String size){
         return id + "/" + size + ".jpg";
     }
 
-    public void storeImage(MultipartFile file, String id, String size) throws DynamoDbItemNotFoundException, ImageFileReadException {
+    public String getImagePresignedUrl(String id, String size) throws DynamoDbItemNotFoundException {
         String key = getKey(id, size);
-        try {
-            s3Template.upload(bucket, key, file.getInputStream(), uploadMetadata(id));
-        } catch (IOException e) {
-            throw new ImageFileReadException();
-        }
+        return s3Template.createSignedPutURL(bucket,key, Duration.ofMinutes(5)).toString();
+    }
+
+    public void registerUploadedImage(String id, String size) throws DynamoDbItemNotFoundException {
+        // make s3 object key
+        String key = getKey(id, size);
+
+        // get fractal info from db
         Fractal fractal = fractalService.getFractal(id);
+        
+        // set content diposition to make file download with nice name instead of displaying in browser
+        String filename = "\"Nick Denning " + fractal.getTitle() + ".jpg\"";
+        // ObjectMetadata metadata = ObjectMetadata.builder().contentDisposition("attachment; filename="+filename).build();
+        CopyObjectRequest request = CopyObjectRequest.builder()
+            .sourceBucket(bucket)
+            .sourceKey(key)
+            .destinationBucket(bucket)
+            .destinationKey(key)
+            .contentDisposition("attachment; filename="+filename)
+            .contentType("image/jpeg")
+            .metadataDirective(MetadataDirective.REPLACE)
+            .build();
+        s3Client.copyObject(request);
+
+        // register new size in database
         List<String> sizes = new ArrayList<>();
         sizes.addAll(fractal.getSizes());
-        sizes.add(size);
+        if(sizes.stream().filter(sz -> sz.equals(size)).findFirst().isEmpty())
+            sizes.add(size);
+        fractal.setSizes(sizes);
         fractalService.updateFractal(fractal);
     }
 

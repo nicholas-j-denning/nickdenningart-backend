@@ -2,7 +2,6 @@ package com.nickdenningart.fractal.controller;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.core.StringContains.containsString;
 
@@ -52,9 +51,6 @@ public class FractalControllerTests {
     void deleteFractalWorks() throws Exception {
         String id = "testid";
         String key = "testkey";
-        Fractal fractal = Fractal.builder()
-            .id(id)
-            .build();
         this.mockMvc.perform(delete("/fractal/"+id).header("x-api-key", key))
             .andExpectAll(
                 status().isOk()

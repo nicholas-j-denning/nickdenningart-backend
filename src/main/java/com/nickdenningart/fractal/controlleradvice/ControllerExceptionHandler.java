@@ -10,7 +10,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.nickdenningart.fractal.dto.ErrorMessage;
 import com.nickdenningart.fractal.exception.AuthorizationException;
 import com.nickdenningart.fractal.exception.DynamoDbItemNotFoundException;
-import com.nickdenningart.fractal.exception.ImageFileReadException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -21,12 +20,6 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler{
     @ExceptionHandler(DynamoDbItemNotFoundException.class)
     protected ResponseEntity<?> handleDynamoDbItemNotFound(HttpServletRequest request, Throwable ex) {
         return new ResponseEntity<>(new ErrorMessage("Resource not in database"),HttpStatus.NOT_FOUND);
-    }
-
-    @ResponseBody
-    @ExceptionHandler(ImageFileReadException.class)
-    protected ResponseEntity<?> handleImageFileRead(HttpServletRequest request, Throwable ex) {
-        return new ResponseEntity<>(new ErrorMessage("Couldn't read image"),HttpStatus.BAD_REQUEST);
     }
 
     @ResponseBody
