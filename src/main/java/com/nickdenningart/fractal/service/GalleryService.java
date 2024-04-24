@@ -21,19 +21,16 @@ public class GalleryService {
     private final DynamoDbTemplate dynamoDbTemplate;
     private final S3Template s3Template;
     private final String bucket;
-    private final ObjectMapper mapper;
 
     public GalleryService(
         DynamoDbTemplate dynamoDbTemplate, 
         S3Template s3Template, 
         @Value("${gallery-bucket}") 
-        String bucket, 
-        ObjectMapper mapper
+        String bucket
         ){
         this.dynamoDbTemplate = dynamoDbTemplate;
         this.s3Template = s3Template;
         this.bucket = bucket;
-        this.mapper = mapper;
     }
 
     public List<GalleryItem> getGallery() {
