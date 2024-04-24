@@ -60,13 +60,14 @@ public class ImageService {
             .build();
         s3Client.copyObject(request);
 
-        // register new size in database
-        List<String> sizes = new ArrayList<>();
-        sizes.addAll(fractal.getSizes());
-        if(sizes.stream().filter(sz -> sz.equals(size)).findFirst().isEmpty())
-            sizes.add(size);
-        fractal.setSizes(sizes);
-        fractalService.updateFractal(fractal);
+            // register new size in database
+            List<String> sizes = new ArrayList<>();
+            sizes.addAll(fractal.getSizes());
+            if(sizes.stream().filter(sz -> sz.equals(size)).findFirst().isEmpty())
+                sizes.add(size);
+            fractal.setSizes(sizes);
+            fractalService.updateFractal(fractal);
+        
     }
 
     public void removeImage(String id, String size){
