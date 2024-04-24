@@ -40,7 +40,7 @@ public class PrintifyService {
 
         // upload landscape image
         Upload upload14400x9600 = Upload.builder()
-            .url(baseImageUrl+"14400x9600/"+id+".jpg")
+            .url(baseImageUrl+id+"/14400x9600.jpg")
             .file_name(id+"-144000x9600")
             .build();
         HttpEntity<Upload> request14400x9600 = new HttpEntity<>(upload14400x9600,headers);
@@ -55,7 +55,7 @@ public class PrintifyService {
 
         // upload portrait image
         Upload upload9600x14400 = Upload.builder()
-            .url(baseImageUrl+"9600x14400/"+id+".jpg")
+            .url(baseImageUrl+id+"/9600x14400.jpg")
             .file_name(id+"-9600x144000")
             .build();
         HttpEntity<Upload> request9600x14400 = new HttpEntity<>(upload9600x14400,headers);
@@ -71,7 +71,7 @@ public class PrintifyService {
 
         // upload square image
         Upload upload9000x9000 = Upload.builder()
-            .url(baseImageUrl+"9000x9000/"+id+".jpg")
+            .url(baseImageUrl+id+"/9000x9000.jpg")
             .file_name(id+"-9000x90000")
             .build();
         HttpEntity<Upload> request9000x9000 = new HttpEntity<>(upload9000x9000,headers);
