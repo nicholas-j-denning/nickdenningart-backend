@@ -2,8 +2,8 @@ package com.nickdenningart.fractal.service;
 
 import java.util.Arrays;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -19,15 +19,36 @@ import com.nickdenningart.fractal.dto.printify.Variant;
 import com.nickdenningart.fractal.exception.DynamoDbItemNotFoundException;
 import com.nickdenningart.fractal.model.Fractal;
 
+import software.amazon.awssdk.regions.providers.AwsRegionProvider;
+
 @Service
 public class PrintifyService {
-    @Autowired
-    private FractalService fractalService;
+    private final FractalService fractalService;
+    private final String printifyUrl;
+    private final String token;
+    private final String baseImageUrl;
+    private final String shop;
+    private boolean prod = false;
 
-    @Value("${printify-api-url}") String printifyUrl;
-    @Value("${printify-token}") String token;
-    private String baseImageUrl = "https://prod-nickdenningart-image.s3.us-west-1.amazonaws.com/";
-
+    public PrintifyService(FractalService fractalService,  
+                            @Value("${printify-api-url}") String printifyUrl,
+                            @Value("${printify-token}") String token,
+                            @Value("${printify-shop}") String shop,
+                            @Value("${image-bucket}") String bucket,
+                            Environment environment,
+                            AwsRegionProvider regionProvider){
+        this.fractalService = fractalService;
+        this.printifyUrl = printifyUrl;
+        this.shop = shop;
+        this.token = token;
+        // set prod if on prod profile
+        for(String profile : environment.getActiveProfiles()){
+            if (profile.equals("prod")) this.prod = true;
+        }
+        // build s3 image url to send to printify
+        String region = regionProvider.getRegion().toString();
+        this.baseImageUrl = "https://"+bucket+".s3."+region+".amazonaws.com/";
+    }
     public void createProducts(String id) throws DynamoDbItemNotFoundException{
         Fractal fractal = fractalService.getFractal(id);
 
@@ -108,8 +129,8 @@ public class PrintifyService {
                     .build()))
             .build();
         HttpEntity<Product> requestMhp = new HttpEntity<>(mhp,headers);
-        mhp = restTemplate.postForObject(printifyUrl+"/shops/11247664/products.json", requestMhp, Product.class);
-        restTemplate.postForObject(printifyUrl+"/shops/11247664/products/"+mhp.id()+"/publish.json", publishingProperties, PublishingProperties.class);
+        mhp = restTemplate.postForObject(printifyUrl+"/shops/"+shop+"/products.json", requestMhp, Product.class);
+        if(prod) restTemplate.postForObject(printifyUrl+"/shops/"+shop+"/products/"+mhp.id()+"/publish.json", publishingProperties, PublishingProperties.class);
 
         System.out.println("Vertical Posters");
         // Create Matte Vertical Posters
@@ -135,8 +156,8 @@ public class PrintifyService {
                     .build()))
             .build();
         HttpEntity<Product> requestMvp = new HttpEntity<>(mvp,headers);
-        mvp = restTemplate.postForObject(printifyUrl+"/shops/11247664/products.json", requestMvp, Product.class);
-        restTemplate.postForObject(printifyUrl+"/shops/11247664/products/"+mvp.id()+"/publish.json", publishingProperties, PublishingProperties.class);
+        mvp = restTemplate.postForObject(printifyUrl+"/shops/"+shop+"/products.json", requestMvp, Product.class);
+        if(prod) restTemplate.postForObject(printifyUrl+"/shops/"+shop+"/products/"+mvp.id()+"/publish.json", publishingProperties, PublishingProperties.class);
 
         System.out.println("Square Posters");
         // Create Matte Square Poster
@@ -162,8 +183,8 @@ public class PrintifyService {
                     .build()))
             .build();
         HttpEntity<Product> requestMsp = new HttpEntity<>(msp,headers);
-        msp = restTemplate.postForObject(printifyUrl+"/shops/11247664/products.json", requestMsp, Product.class);
-        restTemplate.postForObject(printifyUrl+"/shops/11247664/products/"+msp.id()+"/publish.json", publishingProperties, PublishingProperties.class);
+        msp = restTemplate.postForObject(printifyUrl+"/shops/"+shop+"/products.json", requestMsp, Product.class);
+        if(prod) restTemplate.postForObject(printifyUrl+"/shops/"+shop+"/products/"+msp.id()+"/publish.json", publishingProperties, PublishingProperties.class);
 
         System.out.println("Horizontal Acrylic");
         // Create Horizontal Acrylic
@@ -189,8 +210,8 @@ public class PrintifyService {
                     .build()))
             .build();
         HttpEntity<Product> requestHa = new HttpEntity<>(ha,headers);
-        ha = restTemplate.postForObject(printifyUrl+"/shops/11247664/products.json", requestHa, Product.class);
-        restTemplate.postForObject(printifyUrl+"/shops/11247664/products/"+ha.id()+"/publish.json", publishingProperties, PublishingProperties.class);
+        ha = restTemplate.postForObject(printifyUrl+"/shops/"+shop+"/products.json", requestHa, Product.class);
+        if(prod) restTemplate.postForObject(printifyUrl+"/shops/"+shop+"/products/"+ha.id()+"/publish.json", publishingProperties, PublishingProperties.class);
 
         System.out.println("Vertical Acrylic");
         // Create Vertical Acrylic
@@ -216,8 +237,8 @@ public class PrintifyService {
                     .build()))
             .build();
         HttpEntity<Product> requestVa = new HttpEntity<>(va,headers);
-        va = restTemplate.postForObject(printifyUrl+"/shops/11247664/products.json", requestVa, Product.class);
-        restTemplate.postForObject(printifyUrl+"/shops/11247664/products/"+va.id()+"/publish.json", publishingProperties, PublishingProperties.class);
+        va = restTemplate.postForObject(printifyUrl+"/shops/"+shop+"/products.json", requestVa, Product.class);
+        if(prod) restTemplate.postForObject(printifyUrl+"/shops/"+shop+"/products/"+va.id()+"/publish.json", publishingProperties, PublishingProperties.class);
 
         System.out.println("Square Acrylic");
         // Create Square Acrylic
@@ -238,7 +259,7 @@ public class PrintifyService {
                     .build()))
             .build();
         HttpEntity<Product> requestSa = new HttpEntity<>(sa,headers);
-        sa = restTemplate.postForObject(printifyUrl+"/shops/11247664/products.json", requestSa, Product.class);
-        restTemplate.postForObject(printifyUrl+"/shops/11247664/products/"+sa.id()+"/publish.json", publishingProperties, PublishingProperties.class);
+        sa = restTemplate.postForObject(printifyUrl+"/shops/"+shop+"/products.json", requestSa, Product.class);
+        if(prod) restTemplate.postForObject(printifyUrl+"/shops/"+shop+"/products/"+sa.id()+"/publish.json", publishingProperties, PublishingProperties.class);
     };
 }

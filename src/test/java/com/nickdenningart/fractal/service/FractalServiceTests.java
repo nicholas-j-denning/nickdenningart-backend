@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.nickdenningart.fractal.exception.DynamoDbItemNotFoundException;
 import com.nickdenningart.fractal.model.Fractal;
 
+// Integration tests
 @SpringBootTest
 public class FractalServiceTests {
 

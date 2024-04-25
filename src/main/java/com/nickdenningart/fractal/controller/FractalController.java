@@ -31,12 +31,11 @@ public class FractalController {
     private final PrintifyService printifyService;
     private final AuthorizationService authorizationService;
 
-    public FractalController(
-        FractalService fractalService, 
-        ImageService imageService, 
-        GalleryService galleryService,
-        PrintifyService printifyService, 
-        AuthorizationService authorizationService) {
+    public FractalController(FractalService fractalService, 
+                            ImageService imageService, 
+                            GalleryService galleryService,
+                            PrintifyService printifyService, 
+                            AuthorizationService authorizationService) {
         this.fractalService = fractalService;
         this.imageService = imageService;
         this.galleryService = galleryService;
@@ -65,14 +64,6 @@ public class FractalController {
         throws DynamoDbItemNotFoundException, AuthorizationException {
         authorizationService.checkKey(key);
         return new S3Url(imageService.getImagePresignedUrl(id, size));
-    }
-
-    // register uploaded image
-    @PostMapping("/fractal/{id}/{size}")
-    public void postImage(@PathVariable String id, @PathVariable String size, @RequestHeader("x-api-key") String key)
-        throws DynamoDbItemNotFoundException, AuthorizationException {
-        authorizationService.checkKey(key);
-        imageService.registerUploadedImage(id, size);
     }
 
     // update gallery and create products on printify    
