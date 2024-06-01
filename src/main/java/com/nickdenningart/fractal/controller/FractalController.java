@@ -72,7 +72,7 @@ public class FractalController {
         throws DynamoDbItemNotFoundException, AuthorizationException, JsonProcessingException{
         authorizationService.checkKey(key);
         galleryService.updateGallery();
-        // printifyService.createProducts(id); 
+        printifyService.createProducts(id); 
     }
 
     // delete fractal images and db record
