@@ -10,7 +10,7 @@ Resources:
     Properties:
       FunctionName: gallery
       Handler: com.nickdenningart.fractal.Handler
-      Runtime: java17
+      Runtime: java21
       CodeUri: .
       MemorySize: 1024
       Timeout: 30
