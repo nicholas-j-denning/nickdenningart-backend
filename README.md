@@ -1,1 +1,1 @@
-This is the backend for [http://nickdenningart.com](nickdenningart.com), a gallery for my algorithmic fractal artwork. It's built using Spring Boot and Spring Cloud AWS. A CI/CD pipline I built with AWS Java CDK builds this repo and deploys it to AWS Lambda.
+This is the backend for [nickdenningart.com](http://nickdenningart.com), a gallery for my algorithmic fractal artwork. It's built using Spring Boot and Spring Cloud AWS. A CI/CD pipline I built with AWS Java CDK builds this repo and deploys it to AWS Lambda.
